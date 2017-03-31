@@ -26,6 +26,11 @@
 //总时间
 @property (nonatomic, strong) UILabel *totalTimeLabel;
 
+//单击
+@property (nonatomic, strong) UITapGestureRecognizer *singleTapGes;
+//双击
+@property (nonatomic, strong) UITapGestureRecognizer *doubleTapGes;
+
 @end
 
 @implementation ZWPlayerControlView
@@ -129,12 +134,26 @@
 
 //添加手势
 - (void)addGesture {
-    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] init];
-    [tapGes addTarget:self action:@selector(singleTapActoin)];
-    tapGes.numberOfTouchesRequired = 1;
-    tapGes.numberOfTouchesRequired = 1;
-    tapGes.delegate = self;
-    [self addGestureRecognizer:tapGes];
+    //单击
+    UITapGestureRecognizer *singleTapGes = [[UITapGestureRecognizer alloc] init];
+    [singleTapGes addTarget:self action:@selector(singleTapActoin)];
+    singleTapGes.numberOfTapsRequired = 1;
+    singleTapGes.numberOfTouchesRequired = 1;
+    singleTapGes.delegate = self;
+    [self addGestureRecognizer:singleTapGes];
+    self.singleTapGes = singleTapGes;
+    
+    //双击
+    UITapGestureRecognizer *doubleTapGes = [[UITapGestureRecognizer alloc] init];
+    [doubleTapGes addTarget:self action:@selector(doubleTapActoin)];
+    doubleTapGes.numberOfTapsRequired = 2;
+    doubleTapGes.numberOfTouchesRequired = 1;
+    doubleTapGes.delegate = self;
+    [self addGestureRecognizer:doubleTapGes];
+    self.doubleTapGes = doubleTapGes;
+    
+    //如果doubleTapGes识别出双击事件，则singleTapGes不会有任何动作。
+    [singleTapGes requireGestureRecognizerToFail:doubleTapGes];
 }
 
 #pragma mark- layoutSubviews
@@ -191,6 +210,10 @@
     if (_delegate && [_delegate respondsToSelector:@selector(ZWPlayerControlViewSingleTap)]) {
         [_delegate ZWPlayerControlViewSingleTap];
     }
+}
+
+- (void)doubleTapActoin {
+    [self playButtonButtonAction];
 }
 
 //返回

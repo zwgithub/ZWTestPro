@@ -210,6 +210,14 @@
             if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
                 [self setNeedsLayout];
                 [self layoutIfNeeded];
+                
+                UIPanGestureRecognizer *panGes = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesAction:)];
+                [panGes setMaximumNumberOfTouches:1];
+                [panGes setDelaysTouchesBegan:YES];
+                [panGes setDelaysTouchesEnded:YES];
+                [panGes setCancelsTouchesInView:YES];
+                [self addGestureRecognizer:panGes];
+                
             } else if (self.player.currentItem.status == AVPlayerItemStatusFailed) {
                 
             }
@@ -231,6 +239,29 @@
             // 当缓冲好的时候
             
         }
+    }
+}
+
+#pragma mark - 滑动手势
+- (void)panGesAction:(UIPanGestureRecognizer *)pan {
+    CGPoint locationPoint = [pan locationInView:self];
+    CGPoint veloctyPoint = [pan velocityInView:self];
+    NSLog(@"%@",NSStringFromCGPoint(veloctyPoint));
+    switch (pan.state) {
+        case UIGestureRecognizerStateBegan:{
+            CGFloat x = fabs(veloctyPoint.x);
+            CGFloat y = fabs(veloctyPoint.y);
+            if (x > y) {
+                NSLog(@"水平移动");
+            } else if (x < y){
+                NSLog(@"竖直移动");
+            }
+            break;
+        }
+            
+            
+        default:
+            break;
     }
 }
 

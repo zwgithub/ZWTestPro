@@ -21,8 +21,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setRightNavWithTitle:@"全屏" action:@selector(fullScreenAction)];
-        
+//    [self setRightNavWithTitle:@"全屏" action:@selector(fullScreenAction)];
+    
     NSURL *videoUrl = [NSURL URLWithString:@"http://v.jxvdy.com/sendfile/w5bgP3A8JgiQQo5l0hvoNGE2H16WbN09X-ONHPq3P3C1BISgf7C-qVs6_c8oaw3zKScO78I--b0BGFBRxlpw13sf2e54QA"];
 //    NSURL *videoUrl = [NSURL URLWithString:@"http://7xqhmn.media1.z0.glb.clouddn.com/femorning-20161106.mp4"];
     videoUrl = [NSURL URLWithString:@"http://baobab.wdjcdn.com/14525705791193.mp4"];
