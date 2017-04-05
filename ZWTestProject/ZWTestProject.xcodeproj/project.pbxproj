@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		794F89451E8F4E0B00785B7F /* ZWBrightnessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 794F89441E8F4E0B00785B7F /* ZWBrightnessView.m */; };
 		796FCDDD1E8A4EAB00D31962 /* ZWPlayerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 796FCDDC1E8A4EAB00D31962 /* ZWPlayerControlView.m */; };
 		7971B84C1E84EFFE00F358B9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7971B84B1E84EFFE00F358B9 /* main.m */; };
 		7971B84F1E84EFFE00F358B9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7971B84E1E84EFFE00F358B9 /* AppDelegate.m */; };
@@ -51,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		794F89431E8F4E0B00785B7F /* ZWBrightnessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZWBrightnessView.h; sourceTree = "<group>"; };
+		794F89441E8F4E0B00785B7F /* ZWBrightnessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZWBrightnessView.m; sourceTree = "<group>"; };
 		796FCDDB1E8A4EAB00D31962 /* ZWPlayerControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZWPlayerControlView.h; sourceTree = "<group>"; };
 		796FCDDC1E8A4EAB00D31962 /* ZWPlayerControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZWPlayerControlView.m; sourceTree = "<group>"; };
 		7971B8471E84EFFE00F358B9 /* ZWTestProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZWTestProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -312,6 +315,8 @@
 				79E5F1C31E85257200247359 /* ZWPlayerView.m */,
 				796FCDDB1E8A4EAB00D31962 /* ZWPlayerControlView.h */,
 				796FCDDC1E8A4EAB00D31962 /* ZWPlayerControlView.m */,
+				794F89431E8F4E0B00785B7F /* ZWBrightnessView.h */,
+				794F89441E8F4E0B00785B7F /* ZWBrightnessView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -522,6 +527,7 @@
 				7971B8961E84F38F00F358B9 /* ZWSecondVC.m in Sources */,
 				7971B8991E84F3A000F358B9 /* ZWThirdVC.m in Sources */,
 				7971B84C1E84EFFE00F358B9 /* main.m in Sources */,
+				794F89451E8F4E0B00785B7F /* ZWBrightnessView.m in Sources */,
 				7971B8A21E84F76700F358B9 /* ZWTabBarItem.m in Sources */,
 				7971B8B21E8516DB00F358B9 /* ZWAvPlayerVC.m in Sources */,
 				7971B8931E84F37B00F358B9 /* ZWFirstVC.m in Sources */,

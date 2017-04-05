@@ -82,8 +82,9 @@
 
 - (UIButton *)backButton {
     if (!_backButton) {
-        _backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 10, 50, 30)];
+        _backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
         [_backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
+        _backButton.backgroundColor = [UIColor redColor];
         [_backButton addTarget:self action:@selector(backButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _backButton;
@@ -101,9 +102,10 @@
 
 - (UIButton *)playButton {
     if (!_playButton) {
-        _playButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, 30, 50)];
+        _playButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
         [_playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
         [_playButton addTarget:self action:@selector(playButtonButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        _playButton.backgroundColor = [UIColor purpleColor];
     }
     return _playButton;
 }
@@ -159,7 +161,7 @@
 #pragma mark- layoutSubviews
 - (void)layoutSubviews {
     [super layoutSubviews];
-    _topImageView.frame = CGRectMake(0, 0, self.width, 50);
+    _topImageView.frame = CGRectMake(0, 20, self.width, 50);
     _bottomImageView.frame = CGRectMake(0, self.height - 50, self.width, 50);
     
     _tittleLabel.frame = CGRectMake(0, 10, self.topImageView.width, self.bottomImageView.height - 20);
@@ -210,6 +212,11 @@
     if (_delegate && [_delegate respondsToSelector:@selector(ZWPlayerControlViewSingleTap)]) {
         [_delegate ZWPlayerControlViewSingleTap];
     }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self.isShowControlViewFlag == YES) {
+            self.isShowControlViewFlag = !self.isShowControlViewFlag;
+        }
+    });
 }
 
 - (void)doubleTapActoin {

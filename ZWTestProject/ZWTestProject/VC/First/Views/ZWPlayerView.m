@@ -9,6 +9,8 @@
 #import "ZWPlayerView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "ZWPlayerControlView.h"
+#import <MediaPlayer/MediaPlayer.h>
+#import "ZWBrightnessView.h"
 
 @interface ZWPlayerView () <ZWPlayerControlViewDelegate>
 
@@ -18,6 +20,16 @@
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 
 @property (nonatomic, strong) ZWPlayerControlView *controlView;
+
+//滑动的时候是否为竖直方向
+@property (nonatomic, assign) BOOL isVerticalMoved;
+//是否在调节音量
+@property (nonatomic, assign) BOOL isVolume;
+
+//控制音量的滑杆
+@property (nonatomic, strong) UISlider *volumeViewSlider;
+
+@property (nonatomic, strong) ZWBrightnessView *brightnessView;
 
 @end
 
@@ -31,6 +43,13 @@
     return self;
 }
 
+- (ZWBrightnessView *)brightnessView {
+    if (!_brightnessView) {
+        _brightnessView = [ZWBrightnessView sharedBrightnessView];
+    }
+    return _brightnessView;
+}
+
 - (void)backButtonAction {
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
@@ -40,6 +59,7 @@
 }
 
 - (void)configZWPlayerView {
+    
     self.urlAsset = [AVURLAsset assetWithURL:self.videoURL];
     // 初始化playerItem
     self.playerItem = [AVPlayerItem playerItemWithAsset:self.urlAsset];
@@ -53,15 +73,18 @@
     self.playerLayer.frame = self.bounds;
     [self.player play];
     
-    ZWPlayerControlView *controlView = [[ZWPlayerControlView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+    ZWPlayerControlView *controlView = [[ZWPlayerControlView alloc] initWithFrame:CGRectMake(0, 20, self.width, self.height)];
     controlView.delegate = self;
     [self addSubview:controlView];
     self.controlView = controlView;
     
-    // 添加播放进度计时器
+    //添加播放进度计时器
     [self createTimer];
     
-    // 监测设备方向
+    //音量
+    [self configVolume];
+    
+    //监测设备方向
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onDeviceOrientationChange)
@@ -72,7 +95,7 @@
                                              selector:@selector(onStatusBarOrientationChange)
                                                  name:UIApplicationDidChangeStatusBarOrientationNotification
                                                object:nil];
-
+    [self addSubview:self.brightnessView];
 }
 
 - (void)setPlayerItem:(AVPlayerItem *)playerItem {
@@ -107,8 +130,8 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.playerLayer.frame = self.bounds;
-//    self.playerLayer.hidden = YES;
     self.controlView.frame = self.bounds;
+    self.brightnessView.frame = CGRectMake((self.height - self.brightnessView.height) * 0.5, (self.width - self.brightnessView.width) * 0.5, self.brightnessView.width, self.brightnessView.height);
 }
 
 - (void)dealloc {
@@ -156,9 +179,10 @@
     }
     
     if (orientation != UIInterfaceOrientationPortrait) {
-        self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+        self.frame = CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
         self.center = [UIApplication sharedApplication].keyWindow.center;
-//        self.slider.top = self.progressView.bottom + 4;
+//        [self.brightnessView layoutSubviews];
+//        [self.brightnessView layoutIfNeeded];
     }
     
     [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
@@ -208,6 +232,9 @@
         if ([keyPath isEqualToString:@"status"]) {
             
             if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+                
+                [self.layer insertSublayer:self.playerLayer atIndex:0];
+                
                 [self setNeedsLayout];
                 [self layoutIfNeeded];
                 
@@ -246,22 +273,53 @@
 - (void)panGesAction:(UIPanGestureRecognizer *)pan {
     CGPoint locationPoint = [pan locationInView:self];
     CGPoint veloctyPoint = [pan velocityInView:self];
-    NSLog(@"%@",NSStringFromCGPoint(veloctyPoint));
+    //NSLog(@"%@",NSStringFromCGPoint(veloctyPoint));
     switch (pan.state) {
-        case UIGestureRecognizerStateBegan:{
+        case UIGestureRecognizerStateBegan: {
             CGFloat x = fabs(veloctyPoint.x);
             CGFloat y = fabs(veloctyPoint.y);
             if (x > y) {
                 NSLog(@"水平移动");
+                self.isVerticalMoved = NO;
             } else if (x < y){
                 NSLog(@"竖直移动");
+                self.isVerticalMoved = YES;
+                if (locationPoint.x > self.bounds.size.width * 0.5) {
+                    self.isVolume = YES;
+                } else {
+                    self.isVolume = NO;
+                }
             }
             break;
         }
-            
+        case UIGestureRecognizerStateChanged: {
+            NSLog(@"**********正在拖动*************");
+            if (self.isVerticalMoved == YES) {
+                [self verticalMoved:veloctyPoint.y];
+            } else {
+                [self horizontalMoved:veloctyPoint.y];
+            }
+            break;
+        }
+        case UIGestureRecognizerStateEnded:{
+            NSLog(@"取消滑动");
+            break;
+        }
             
         default:
             break;
+    }
+}
+
+- (void)horizontalMoved:(CGFloat)value {
+
+}
+
+- (void)verticalMoved:(CGFloat)value {
+    if (self.isVolume == YES) {
+        self.volumeViewSlider.value -= value/10000;
+    } else {
+        [UIScreen mainScreen].brightness -= value/10000;
     }
 }
 
@@ -303,12 +361,26 @@
     }];
 }
 
+- (void)configVolume {
+    MPVolumeView *volumeView = [[MPVolumeView alloc] init];
+    _volumeViewSlider = nil;
+    for (UIView *view in [volumeView subviews]) {
+        if ([view.class.description isEqualToString:@"MPVolumeSlider"]) {
+            _volumeViewSlider = (UISlider *)view;
+            break;
+        }
+    }
+}
+
 #pragma mark- ZWPlayerControlViewDelegate
 - (void)ZWPlayerControlViewSingleTap {
     
 }
 
 - (void)ZWPlayerControlViewBackButonAction {
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    [self.brightnessView removeFromSuperview];
+    self.brightnessView.alpha = 0;
     [self backButtonAction];
 }
 
