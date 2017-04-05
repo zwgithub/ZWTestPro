@@ -22,6 +22,12 @@
 //总时间
 @property (nonatomic, strong) NSString *totalTime;
 
+//设置缓存进度
+- (void)setCacheValue:(CGFloat)value;
+
+//当前播放进度
+- (void)setCurrentValue:(CGFloat)value;
+
 @end
 
 @protocol ZWPlayerControlViewDelegate <NSObject>
@@ -32,5 +38,11 @@
 - (void)ZWPlayerControlViewBackButonAction;
 //播放或者暂停事件
 - (void)ZWPlayerControlViewPlayFlag:(BOOL)playFlag;
+//拖动开始
+- (void)ZWPlayerControlViewProgressSliderTouchBegan:(UISlider *)slider;
+//拖动中
+- (void)ZWPlayerControlViewProgressSliderValueChanged:(UISlider *)slider;
+//拖动结束
+- (void)ZWPlayerControlViewProgressSliderTouchEnded:(UISlider *)slider;
 
 @end

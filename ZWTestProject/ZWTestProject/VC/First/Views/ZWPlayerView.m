@@ -11,8 +11,9 @@
 #import "ZWPlayerControlView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "ZWBrightnessView.h"
+#import "ZWProgressView.h"
 
-@interface ZWPlayerView () <ZWPlayerControlViewDelegate>
+@interface ZWPlayerView () <ZWPlayerControlViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVPlayerItem *playerItem;
@@ -237,6 +238,7 @@
                 [self layoutIfNeeded];
                 
                 UIPanGestureRecognizer *panGes = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesAction:)];
+                panGes.delegate = self;
                 [panGes setMaximumNumberOfTouches:1];
                 [panGes setDelaysTouchesBegan:YES];
                 [panGes setDelaysTouchesEnded:YES];
@@ -248,11 +250,11 @@
             }
         } else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
             //计算缓冲进度
-//            NSTimeInterval timeInterval = [self availableDuration];
-//            CMTime duration = self.playerItem.duration;
-//            CGFloat totalDuration = CMTimeGetSeconds(duration);
-//            NSLog(@"缓冲进度:%f",timeInterval / totalDuration);
-//            self.progressView.progress = timeInterval / totalDuration;
+            NSTimeInterval timeInterval = [self availableDuration];
+            CMTime duration = self.playerItem.duration;
+            CGFloat totalDuration = CMTimeGetSeconds(duration);
+            NSLog(@"缓冲进度:%f",timeInterval / totalDuration);
+            [self.controlView setCacheValue:timeInterval / totalDuration];
         } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
             // 当缓冲是空的时候
             if (self.playerItem.playbackBufferEmpty) {
@@ -347,6 +349,7 @@
             NSInteger currentTime = (NSInteger)CMTimeGetSeconds([currentItem currentTime]);
             NSInteger totalTime = (NSInteger)currentItem.duration.value / currentItem.duration.timescale;
             CGFloat value = CMTimeGetSeconds([currentItem currentTime]) / totalTime;
+            [weakSelf.controlView setCurrentValue:value];
 //            NSLog(@"播放的百分比：%f",value);
             NSInteger proMin = currentTime / 60;//当前秒
             NSInteger proSec = currentTime % 60;//当前分钟
@@ -388,6 +391,36 @@
     } else {
         [self.player pause];
     }
+}
+
+//拖动开始
+- (void)ZWPlayerControlViewProgressSliderTouchBegan:(UISlider *)slider {
+
+}
+//拖动中
+- (void)ZWPlayerControlViewProgressSliderValueChanged:(UISlider *)slider {
+    if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+        CGFloat totalTime = (CGFloat)_playerItem.duration.value / _playerItem.duration.timescale;
+        CGFloat dragedSeconds = floorf(totalTime * slider.value);
+        CMTime dragedCMTime = CMTimeMake(dragedSeconds, 1);
+        [self.playerItem seekToTime:dragedCMTime];
+        [self.controlView setCurrentValue:dragedSeconds/totalTime];
+        NSInteger proMin = dragedSeconds / 60;//当前秒
+        NSInteger proSec = (NSInteger)dragedSeconds % 60;//当前分钟
+        self.controlView.currentTime = [NSString stringWithFormat:@"%02zd:%02zd", proMin, proSec];
+    }
+}
+//拖动结束
+- (void)ZWPlayerControlViewProgressSliderTouchEnded:(UISlider *)slider {
+
+}
+
+#pragma mark- 手势代理
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isKindOfClass:[UIButton class]] || [touch.view isKindOfClass:[UISlider class]]) {
+        return NO;
+    }
+    return YES;
 }
 
 @end

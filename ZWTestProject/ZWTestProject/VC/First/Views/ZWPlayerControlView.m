@@ -7,6 +7,8 @@
 //
 
 #import "ZWPlayerControlView.h"
+#import "ZWBaseView.h"
+#import "ZWProgressView.h"
 
 @interface ZWPlayerControlView () <UIGestureRecognizerDelegate>
 
@@ -25,6 +27,8 @@
 @property (nonatomic, strong) UILabel *currentTimeLabel;
 //总时间
 @property (nonatomic, strong) UILabel *totalTimeLabel;
+//进度条
+@property (nonatomic, strong) ZWProgressView *progressView;
 
 //单击
 @property (nonatomic, strong) UITapGestureRecognizer *singleTapGes;
@@ -50,6 +54,7 @@
         [self.bottomImageView addSubview:self.playButton];
         [self.bottomImageView addSubview:self.currentTimeLabel];
         [self.bottomImageView addSubview:self.totalTimeLabel];
+        [self.bottomImageView addSubview:self.progressView];
         
         //添加手势
         [self addGesture];
@@ -134,6 +139,20 @@
     return _totalTimeLabel;
 }
 
+- (ZWProgressView *)progressView {
+    if (!_progressView) {
+        _progressView = [[ZWProgressView alloc] initWithFrame:CGRectMake(_currentTimeLabel.right, (self.bottomImageView.height - 20) * 0.5, self.width - _currentTimeLabel.right - 65, 20)];
+        
+        // slider开始滑动事件
+        [_progressView.slider addTarget:self action:@selector(progressSliderTouchBegan:) forControlEvents:UIControlEventTouchDown];
+        // slider滑动中事件
+        [_progressView.slider addTarget:self action:@selector(progressSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+        // slider结束滑动事件
+        [_progressView.slider addTarget:self action:@selector(progressSliderTouchEnded:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchCancel | UIControlEventTouchUpOutside];
+    }
+    return _progressView;
+}
+
 //添加手势
 - (void)addGesture {
     //单击
@@ -168,6 +187,8 @@
     
     _currentTimeLabel.frame = CGRectMake(_playButton.right, 0, 45, self.bottomImageView.height);
     _totalTimeLabel.frame = CGRectMake(self.bottomImageView.width - 65, 0, 45, self.bottomImageView.height);
+    
+    _progressView.frame = CGRectMake(_currentTimeLabel.right, (self.bottomImageView.height - 20) * 0.5, self.width - _currentTimeLabel.right - 65, 20);
 }
 
 - (void)setIsShowControlViewFlag:(BOOL)isShowControlViewFlag {
@@ -212,11 +233,11 @@
     if (_delegate && [_delegate respondsToSelector:@selector(ZWPlayerControlViewSingleTap)]) {
         [_delegate ZWPlayerControlViewSingleTap];
     }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (self.isShowControlViewFlag == YES) {
-            self.isShowControlViewFlag = !self.isShowControlViewFlag;
-        }
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        if (self.isShowControlViewFlag == YES) {
+//            self.isShowControlViewFlag = !self.isShowControlViewFlag;
+//        }
+//    });
 }
 
 - (void)doubleTapActoin {
@@ -238,12 +259,37 @@
     }
 }
 
+//设置缓存进度
+- (void)setCacheValue:(CGFloat)value {
+    [self.progressView setCache:value];
+}
+
+//当前播放进度
+- (void)setCurrentValue:(CGFloat)value {
+    [self.progressView setCurrentTime:value];
+}
+
 #pragma mark- 手势代理
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if ([touch.view isKindOfClass:[UIButton class]]) {
+    if ([touch.view isKindOfClass:[UIButton class]] || [touch.view isKindOfClass:[ZWProgressView class]]) {
         return NO;
     }
     return YES;
+}
+
+- (void)progressSliderTouchBegan:(id)slider {
+    _progressView.isSlidingFlag = YES;
+}
+
+- (void)progressSliderValueChanged:(id)slider {
+    _progressView.isSlidingFlag = YES;
+    if (_delegate && [_delegate respondsToSelector:@selector(ZWPlayerControlViewProgressSliderValueChanged:)]) {
+        [_delegate ZWPlayerControlViewProgressSliderValueChanged:slider];
+    }
+}
+
+- (void)progressSliderTouchEnded:(id)slider {
+    _progressView.isSlidingFlag = NO;
 }
 
 @end

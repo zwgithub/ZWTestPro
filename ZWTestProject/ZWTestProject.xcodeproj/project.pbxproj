@@ -28,6 +28,7 @@
 		7971B8A21E84F76700F358B9 /* ZWTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7971B8A11E84F76700F358B9 /* ZWTabBarItem.m */; };
 		7971B8A61E850AB600F358B9 /* UIView+Additional.m in Sources */ = {isa = PBXBuildFile; fileRef = 7971B8A51E850AB600F358B9 /* UIView+Additional.m */; };
 		7971B8B21E8516DB00F358B9 /* ZWAvPlayerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7971B8B11E8516DB00F358B9 /* ZWAvPlayerVC.m */; };
+		79A2C13C1E94D5F200D354E2 /* ZWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A2C13B1E94D5F200D354E2 /* ZWProgressView.m */; };
 		79E1641B1E88B929003A67B3 /* UIViewController+Navigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E1641A1E88B929003A67B3 /* UIViewController+Navigation.m */; };
 		79E1641F1E893731003A67B3 /* ZWProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E1641E1E893731003A67B3 /* ZWProgressViewController.m */; };
 		79E5F1C11E85254400247359 /* ZWBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E5F1C01E85254400247359 /* ZWBaseView.m */; };
@@ -95,6 +96,8 @@
 		7971B8A71E850DBC00F358B9 /* ZWTestProject.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZWTestProject.pch; sourceTree = "<group>"; };
 		7971B8B01E8516DB00F358B9 /* ZWAvPlayerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZWAvPlayerVC.h; sourceTree = "<group>"; };
 		7971B8B11E8516DB00F358B9 /* ZWAvPlayerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZWAvPlayerVC.m; sourceTree = "<group>"; };
+		79A2C13A1E94D5F200D354E2 /* ZWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZWProgressView.h; sourceTree = "<group>"; };
+		79A2C13B1E94D5F200D354E2 /* ZWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZWProgressView.m; sourceTree = "<group>"; };
 		79E164191E88B929003A67B3 /* UIViewController+Navigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Navigation.h"; sourceTree = "<group>"; };
 		79E1641A1E88B929003A67B3 /* UIViewController+Navigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Navigation.m"; sourceTree = "<group>"; };
 		79E1641D1E893731003A67B3 /* ZWProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZWProgressViewController.h; sourceTree = "<group>"; };
@@ -317,6 +320,8 @@
 				796FCDDC1E8A4EAB00D31962 /* ZWPlayerControlView.m */,
 				794F89431E8F4E0B00785B7F /* ZWBrightnessView.h */,
 				794F89441E8F4E0B00785B7F /* ZWBrightnessView.m */,
+				79A2C13A1E94D5F200D354E2 /* ZWProgressView.h */,
+				79A2C13B1E94D5F200D354E2 /* ZWProgressView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -533,6 +538,7 @@
 				7971B8931E84F37B00F358B9 /* ZWFirstVC.m in Sources */,
 				79E1641F1E893731003A67B3 /* ZWProgressViewController.m in Sources */,
 				7971B89C1E84F3B700F358B9 /* ZWFourthVC.m in Sources */,
+				79A2C13C1E94D5F200D354E2 /* ZWProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

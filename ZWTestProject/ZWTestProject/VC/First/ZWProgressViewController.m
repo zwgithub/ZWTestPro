@@ -16,23 +16,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UIProgressView *progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 150, self.view.width, 150)];
+    
+    UIProgressView *progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(32, 209, self.view.width - 63, 8)];
     progressView.progressViewStyle = UIProgressViewStyleDefault;
-    progressView.progress = 0.5;
-    progressView.trackTintColor=[UIColor grayColor];
-    progressView.progressTintColor=[UIColor redColor];
-    progressView.backgroundColor = [UIColor purpleColor];
+    progressView.progress = 1;
+//    progressView.trackTintColor=[UIColor grayColor];
+    progressView.progressTintColor=[UIColor darkGrayColor];
     [self.view addSubview:progressView];
     
-    UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(0, 200, self.view.width, 50)];
-    slider.backgroundColor = [UIColor greenColor];
+    UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(30, 200, self.view.width - 60, 20)];
+    slider.backgroundColor = [UIColor clearColor];
+    slider.value = 0.2;
+    slider.minimumTrackTintColor = [UIColor greenColor];
+    slider.maximumTrackTintColor = [UIColor clearColor];
     [self.view addSubview:slider];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onDeviceOrientationChange)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
-
 }
 
 - (void)onDeviceOrientationChange {
