@@ -34,7 +34,14 @@
     [self.view addSubview:playerView];
     self.playerView = playerView;
     
-    [self.playerView toOrientation:UIInterfaceOrientationLandscapeLeft];
+    //根据屏幕的初始方向来设置播放的方向。
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    UIInterfaceOrientation interfaceOrientation = (UIInterfaceOrientation)orientation;
+    if (interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+        [self.playerView toOrientation:UIInterfaceOrientationLandscapeRight];
+    } else {
+        [self.playerView toOrientation:UIInterfaceOrientationLandscapeLeft];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

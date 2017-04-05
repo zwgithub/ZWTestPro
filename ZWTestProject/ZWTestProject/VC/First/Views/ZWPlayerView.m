@@ -181,8 +181,6 @@
     if (orientation != UIInterfaceOrientationPortrait) {
         self.frame = CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
         self.center = [UIApplication sharedApplication].keyWindow.center;
-//        [self.brightnessView layoutSubviews];
-//        [self.brightnessView layoutIfNeeded];
     }
     
     [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
